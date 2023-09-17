@@ -11,6 +11,10 @@ import { ButtonsId } from "res/buttons/ButtonsId";
 
 import NewSpendingModal from "res/modals/NewSpending";
 import RefillModal from "res/modals/Refill";
+import { ModalsId } from "res/modals/ModalsId";
+
+import refill from "res/actions/refill";
+import newSpending from "res/actions/newSpending";
 
 client.once(Events.ClientReady, async (c) => {
   /**  [ "Carte Bleue", $ ], [ "Lunch Card", $ ] */
@@ -45,6 +49,17 @@ client.on(Events.InteractionCreate, async (i) => {
         break;
       case ButtonsId.SETUP_CARD_AMOUNT:
         i.showModal(RefillModal);
+        break;
+    }
+  }
+
+  if (i.isModalSubmit()) {
+    switch (i.customId) {
+      case ModalsId.NEW_SPENDING:
+        newSpending(i);
+        break;
+      case ModalsId.REFILL:
+        refill(i);
         break;
     }
   }
