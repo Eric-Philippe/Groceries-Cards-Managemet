@@ -16,6 +16,8 @@ db.run(/* sql */ `
       );
   `);
 
+console.log("Table cards created successfully");
+
 db.run(/* sql */ `
       CREATE TABLE IF NOT EXISTS history (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,6 +27,8 @@ db.run(/* sql */ `
           timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
       );
   `);
+
+console.log("Table history created successfully");
 
 /**
  * @DATABASE_DEFAULT_VALUES
@@ -42,3 +46,5 @@ db.run(/* sql */ `
     VALUES ('Lunch Card', 0)
     ON CONFLICT DO NOTHING;
     `);
+
+console.log("Default values inserted successfully");

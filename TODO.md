@@ -1,5 +1,5 @@
 - [x] Comment all the code
-- [ ] Write a proper README.md
+- [x] Write a proper README.md
 - [x] Add a LICENSE
 - [x] Host the bot somewhere
-- [ ] Setup GitHub Actions ('cuz it's fancy)
+- [ ] Setup GitHub Actions ('cuz it's fancy) (but a bit useless here)
