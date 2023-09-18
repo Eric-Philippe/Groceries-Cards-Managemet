@@ -1,3 +1,4 @@
+/** ModalsID Enum for Simplicity */
 export enum ModalsId {
   NEW_SPENDING = "new_spending",
   REFILL = "refill",

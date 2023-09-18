@@ -1,12 +1,19 @@
+import { APIEmbed, EmbedBuilder, ModalSubmitInteraction } from "discord.js";
+
 import CardsManager from "CardsManager";
 import HistoryManager from "HistoryManager";
-import { APIEmbed, EmbedBuilder, ModalSubmitInteraction } from "discord.js";
+
 import { Colors } from "res/Colors";
 import { ModalsId } from "res/modals/ModalsId";
 
 const MONTHS: string[] = require("../../../months.json").MONTHS;
 
+/**
+ * @description Create a new spending
+ * @param i - The interaction
+ */
 export default async function newSpending(i: ModalSubmitInteraction) {
+  // Get the values of the modal inputs
   const title = i.fields.getTextInputValue(ModalsId.TITLE);
   const cbAmount = i.fields.getTextInputValue(ModalsId.CB_CARD_AMOUNT);
   const lcAmount = i.fields.getTextInputValue(ModalsId.LC_CARD_AMOUNT);
@@ -20,24 +27,24 @@ export default async function newSpending(i: ModalSubmitInteraction) {
     return;
   }
 
+  // Substract the amount to the cards
   CardsManager.subCBAmount(Number(cbAmount));
   CardsManager.subLCAmount(Number(lcAmount));
 
+  // Add the spending to the history
   HistoryManager.setHistory(title, Number(cbAmount), Number(lcAmount));
 
-  const successEmbed = new EmbedBuilder()
-    .setColor(Colors.SUCCESS)
-    .setDescription("✅ | Spending successfully added !");
-
+  // Load the updates values
   const monthHistory = HistoryManager.getHistory();
-
   const newCbAmount = CardsManager.getCBAmount();
   const newLcAmount = CardsManager.getLCAmount();
   const totalCb = HistoryManager.getTotalCBSpent(monthHistory);
   const totalLc = HistoryManager.getTotalLCSpent(monthHistory);
 
+  // Get the current month
   const currentMonthString = MONTHS[new Date().getMonth()];
 
+  // Draw the updated embed with the new values
   const oldEmbed = i.message?.embeds[0] as APIEmbed;
   const newEmbed = EmbedBuilder.from(oldEmbed);
   newEmbed
@@ -71,5 +78,10 @@ export default async function newSpending(i: ModalSubmitInteraction) {
     });
 
   await i.message?.edit({ embeds: [newEmbed] });
+
+  const successEmbed = new EmbedBuilder()
+    .setColor(Colors.SUCCESS)
+    .setDescription("✅ | Spending successfully added !");
+
   i.reply({ embeds: [successEmbed], ephemeral: true });
 }

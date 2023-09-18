@@ -1,12 +1,19 @@
+import { APIEmbed, EmbedBuilder, ModalSubmitInteraction } from "discord.js";
+
 import CardsManager from "CardsManager";
 import HistoryManager from "HistoryManager";
-import { APIEmbed, EmbedBuilder, ModalSubmitInteraction } from "discord.js";
+
 import { Colors } from "res/Colors";
 import { ModalsId } from "res/modals/ModalsId";
 
 const MONTHS: string[] = require("../../../months.json").MONTHS;
 
+/**
+ * @description Refill the cards
+ * @param i - The interaction
+ */
 export default async function refill(i: ModalSubmitInteraction) {
+  // Get the values of the modal inputs
   const cbAmount = i.fields.getTextInputValue(ModalsId.CB_CARD_AMOUNT);
   const lcAmount = i.fields.getTextInputValue(ModalsId.LC_CARD_AMOUNT);
 
@@ -19,17 +26,16 @@ export default async function refill(i: ModalSubmitInteraction) {
     return;
   }
 
+  // Set the new values
   CardsManager.setCBAmount(Number(cbAmount));
   CardsManager.setLCAmount(Number(lcAmount));
 
-  const successEmbed = new EmbedBuilder()
-    .setColor(Colors.SUCCESS)
-    .setDescription("✅ | Card amounts successfully updated !");
-
+  // Fetch the history of the groceries spending for the current month
   const monthHistory = HistoryManager.getHistory();
 
   const currentMonthString = MONTHS[new Date().getMonth()];
 
+  // Draw the updated embed with the new values
   const oldEmbed = i.message?.embeds[0] as APIEmbed;
   const newEmbed = EmbedBuilder.from(oldEmbed);
   newEmbed
@@ -61,5 +67,10 @@ export default async function refill(i: ModalSubmitInteraction) {
     });
 
   await i.message?.edit({ embeds: [newEmbed] });
+
+  const successEmbed = new EmbedBuilder()
+    .setColor(Colors.SUCCESS)
+    .setDescription("✅ | Card amounts successfully updated !");
+
   i.reply({ embeds: [successEmbed], ephemeral: true });
 }

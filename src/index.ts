@@ -8,10 +8,9 @@ import { Card } from "types/Card";
 import CardsManager from "CardsManager";
 
 import { ButtonsId } from "res/buttons/ButtonsId";
-
+import { ModalsId } from "res/modals/ModalsId";
 import NewSpendingModal from "res/modals/NewSpending";
 import RefillModal from "res/modals/Refill";
-import { ModalsId } from "res/modals/ModalsId";
 
 import refill from "res/actions/refill";
 import newSpending from "res/actions/newSpending";
@@ -29,6 +28,7 @@ client.once(Events.ClientReady, async (c) => {
 });
 
 client.on(Events.InteractionCreate, async (i) => {
+  /** @SLASH_COMMANDS */
   if (i.isCommand()) {
     const slashCommand = commands.find((c) => c.name === i.command?.name);
 
@@ -42,6 +42,7 @@ client.on(Events.InteractionCreate, async (i) => {
     slashCommand.run(i);
   }
 
+  /** @BUTTON_PRESSED */
   if (i.isButton()) {
     switch (i.customId) {
       case ButtonsId.NEW_SPENDING:
@@ -53,6 +54,7 @@ client.on(Events.InteractionCreate, async (i) => {
     }
   }
 
+  /** @MODAL_SUBMITTED */
   if (i.isModalSubmit()) {
     switch (i.customId) {
       case ModalsId.NEW_SPENDING:

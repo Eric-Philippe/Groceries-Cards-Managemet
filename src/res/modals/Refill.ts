@@ -7,6 +7,7 @@ import {
 
 import { ModalsId } from "./ModalsId";
 
+/** Refill Cards Modal Builder */
 export default new ModalBuilder()
   .setCustomId(ModalsId.REFILL)
   .setTitle("💳 Refill the cards")

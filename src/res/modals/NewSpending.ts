@@ -7,6 +7,7 @@ import {
 
 import { ModalsId } from "./ModalsId";
 
+/** New Spending Modal Builder */
 export default new ModalBuilder()
   .setCustomId(ModalsId.NEW_SPENDING)
   .setTitle("🛒 Register a new spending")
