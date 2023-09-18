@@ -1,4 +1,5 @@
 import CardsManager from "CardsManager";
+import HistoryManager from "HistoryManager";
 import { APIEmbed, EmbedBuilder, ModalSubmitInteraction } from "discord.js";
 import { Colors } from "res/Colors";
 import { ModalsId } from "res/modals/ModalsId";
@@ -25,6 +26,8 @@ export default async function refill(i: ModalSubmitInteraction) {
     .setColor(Colors.SUCCESS)
     .setDescription("✅ | Card amounts successfully updated !");
 
+  const monthHistory = HistoryManager.getHistory();
+
   const currentMonthString = MONTHS[new Date().getMonth()];
 
   const oldEmbed = i.message?.embeds[0] as APIEmbed;
@@ -43,13 +46,18 @@ export default async function refill(i: ModalSubmitInteraction) {
       },
       {
         name: "🥪 Lunch Card",
-        value: "``💸" + lcAmount + "€``",
+        value: "``💸 " + lcAmount + "€``",
         inline: true,
       },
     ])
-    .setDescription("History of the groceries spending : \n*- Empty* \n")
+    .setDescription(
+      "History of the groceries spending : \n" +
+        HistoryManager.getFullHistoryToString(monthHistory)
+    )
     .setFooter({
-      text: `Total spent CB : 0€ | Total spent LC : 0€`,
+      text: `Total spent CB : ${HistoryManager.getTotalCBSpent(
+        monthHistory
+      )}€ | Total spent LC : ${HistoryManager.getTotalLCSpent(monthHistory)}€`,
     });
 
   await i.message?.edit({ embeds: [newEmbed] });

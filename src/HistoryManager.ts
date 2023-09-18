@@ -1,4 +1,5 @@
 import db from "database";
+import { dateToSlashDate } from "res/date_utils";
 
 import { History } from "types/History";
 
@@ -27,5 +28,47 @@ export default class HistoryManager {
     });
 
     return history;
+  }
+
+  static toString(history: History): string {
+    return `- ${dateToSlashDate()} - ${history.title} : CB ${
+      history.amount_cb
+    }€ | LC ${history.amount_lc}€`;
+  }
+
+  static getFullHistoryToString(history: History[]): string {
+    if (history.length === 0) return "*- Empty*";
+    let string = "";
+
+    history.forEach((h) => {
+      string += `${this.toString(h)}\n`;
+    });
+
+    return string;
+  }
+
+  static getTotalCBSpent(history: History[]): number {
+    let total = 0;
+
+    history.forEach((h) => {
+      total += h.amount_cb;
+    });
+
+    return total;
+  }
+
+  static getTotalLCSpent(history: History[]): number {
+    let total = 0;
+
+    history.forEach((h) => {
+      total += h.amount_lc;
+    });
+
+    return total;
+  }
+
+  static emptyHistory() {
+    const query = db.query("DELETE FROM history");
+    query.run();
   }
 }
